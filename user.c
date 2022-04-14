@@ -50,6 +50,10 @@ int user_returns(struct user * u, const struct book * b, const int days_borrowed
   }else{  //faster return
     u->score += days_hold * 2;
   }
+
+  u->borrowed_book = NULL;
+  u->days_available = 0;
+
   return u->score;
 }
 
@@ -66,9 +70,9 @@ int cmp_f_user(const void * arg1, const void * arg2){
   const struct user * u2 = (const struct user *) arg2;
 
   if(u1->score < u2->score){
-    return -1;
-  }else if(u1->score > u2->score){
     return 1;
+  }else if(u1->score > u2->score){
+    return -1;
   }else{
     return strcmp(u1->username, u2->username);
   }

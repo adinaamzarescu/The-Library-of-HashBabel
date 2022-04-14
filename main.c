@@ -124,7 +124,7 @@ static void cmd_add_user(struct database * db, const char * user_name){
 static void cmd_borrow(struct database * db,
   const char * user_name, const char * book_name, const int days_available){
 
-  struct user * u = user_create(user_name);
+  struct user * u = ht_get(&db->users, user_name);
   if(u){
     if(user_is_banned(u)){
       printf("You are banned from this library\n");
@@ -150,7 +150,7 @@ static void cmd_borrow(struct database * db,
 static void cmd_return(struct database * db,
   const char * user_name, const char * book_name, const int days_since_borrow, const int rating){
 
-  struct user * u = user_create(user_name);
+  struct user * u = ht_get(&db->users, user_name);
   if(u){
     if(user_is_banned(u)){
       printf("You are banned from this library\n");
@@ -175,7 +175,7 @@ static void cmd_return(struct database * db,
 }
 
 static void cmd_lost(struct database * db, const char * user_name, const char * book_name){
-  struct user * u = user_create(user_name);
+  struct user * u = ht_get(&db->users, user_name);
   if(u){
     if(user_is_banned(u)){
       printf("You are banned from this library\n");

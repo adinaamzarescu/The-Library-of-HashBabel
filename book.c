@@ -89,7 +89,8 @@ int book_add(struct book * b, const char * key, const char * val){
 }
 
 int book_borow(struct book * b){
-  if((b->copies - 1) > 0){  //if we can borrow
+  if((b->copies - 1) >= 0){  //if we can borrow
+    b->purchases++;
     b->copies--;
     return 1;
   }
