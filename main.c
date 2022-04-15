@@ -117,6 +117,8 @@ static void cmd_add_user(struct database * db, const char * user_name){
     char * key = strdup(user_name);
     if(ht_put(&db->users, (void*) key, (void*) u) == 0){
       printf("User is already registered.\n");
+      free(key);
+      user_free(u);
     }
   }
 }
@@ -216,7 +218,7 @@ static void cmd_top_books(struct database * db){
 }
 
 static void cmd_top_users(struct database * db){
-  const struct user ** users = (const struct user **) ht_array(&db->users);
+  struct user ** users = (struct user **) ht_array(&db->users);
   printf("Users ranking:\n");
   if(users){
     int i;
@@ -270,14 +272,9 @@ static int run_line(char * const args[], const size_t nargs, struct database * d
   }else if(strcmp(cmd, "LOST") == 0){
     cmd_lost(db, args[1], args[2]);
 
-  /* ranking commands */
-  }else if(strcmp(cmd, "TOP_BOOKS") == 0){
-    cmd_top_books(db);
-
-  }else if(strcmp(cmd, "TOP_USERS") == 0){
-    cmd_top_users(db);
-
   }else if(strcmp(cmd, "EXIT") == 0){
+    cmd_top_books(db);
+    cmd_top_users(db);
     return -1;
   }
 

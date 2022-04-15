@@ -2,25 +2,33 @@
 #include <stdlib.h>
 #include "hashtbl.h"
 
-static struct hash_item* ht_find(const struct hashtbl * ht, const void* key){
-  //compute the index for this key
+/**
+ * Function to find a key in the hashtable
+ * @param ht  hashtable
+ * @param key the key
+ */
+static struct hash_item* ht_find(const struct hashtbl * ht, const void* key) {
+  // Compute the index for this key
   const unsigned int h = ht->hash_f(key) % ht->capacity;
 
-  //search for the key
+  // Search for the key
   struct hash_item * item = ht->table[h];
-  while(item){
-    if(ht->cmp_f(item->key, key) == 0){
-      return item; //key is found
-    }
+  while(item) {
+    if(ht->cmp_f(item->key, key) == 0)
+      return item; // Key is found
     item = item->next;
   }
 
-  return NULL; //doens't have key
+  return NULL; // Doesn't have key
 }
 
-static void ht_clear(struct hashtbl * ht){
-  int i;
-  for(i=0; i < ht->capacity; i++){
+/**
+ * Function to clear a hashtable and free the memory
+ * @param ht hashtable
+ */
+
+static void ht_clear(struct hashtbl * ht) {
+  for(int i = 0; i < ht->capacity; ++i) {
 
     struct hash_item * iter = ht->table[i];
     while(iter){
@@ -97,51 +105,62 @@ int ht_init(struct hashtbl * ht, const int capacity, FREE_F free_k, FREE_F free_
 
 void ht_deinit(struct hashtbl * ht){
   ht_clear(ht);
+  free(ht->table);
   ht->size = 0;
 }
 
-int   ht_put(struct hashtbl * ht, const void* key, void * value){
+/**
+ * Function to add a new value in the hashtable
+ * @param ht    hashtable
+ * @param key   value's key
+ * @param value the value
+ */
 
-  // get hash for this key
+int ht_put(struct hashtbl * ht, void* key, void * value){
+
+  // Get hash for this key
   const unsigned int h = ht->hash_f(key) % ht->capacity;
 
-  // does it exist ?
+  // Does it exist ?
   struct hash_item * item = ht->table[h];
-  while(item){
-    if(ht->cmp_f(key, item->key) == 0){
-      return 0; //not inserted
+
+  while(item) {
+    if(ht->cmp_f(key, item->key) == 0) {
+      return 0; // Not inserted
     }
     item = item->next;
   }
 
   item = (struct hash_item *) malloc(sizeof(struct hash_item));
-  if(item == NULL){
-    perror("malloc");
-    return -1;  //error
+
+  if(!item) {
+    perror("Malloc for item failed");
+    return -1;  // Error
   }
 
-  //add key value to item
+  // Add key value to item
   item->key = key;
   item->value = value;
 
-  //prepend to bucket list
+  // Prepend to bucket list
   item->next = ht->table[h];
   ht->table[h] = item;
 
-  //update table size
+  // Update table size
   ht->size++;
 
-  //test for resizing
-  if(ht_is_crowded(ht)){
+  // Test for resizing
+  if(ht_is_crowded(ht)) {
     ht_resize(ht);
   }
 
-  return 1; //inserted
+  return 1; // Inserted
 }
 
-int ht_update(struct hashtbl * ht, const void* key, void * value){
+int ht_update(struct hashtbl * ht, const void* key, void * value) {
   struct hash_item * item = ht_find(ht, key);
-  if(item == NULL){
+  if(!item == NULL) {
+    perror("Malloc for item failed");
     return -1;
   }
 
@@ -151,46 +170,62 @@ int ht_update(struct hashtbl * ht, const void* key, void * value){
   return 0;
 }
 
-int   ht_remove(struct hashtbl * ht, const void* key){
+/**
+ * Function to remove a key and its value
+ * @param ht    hashtable
+ * @param key   the key
+ */
 
-  // get hash for this key
+int ht_remove(struct hashtbl * ht, const void* key){
+
+  // Get hash for this key
   const unsigned int h = ht->hash_f(key) % ht->capacity;
 
   struct hash_item * item = ht->table[h];
   struct hash_item * prev = NULL;
-  while(item){
-    if(ht->cmp_f(item->key, key) == 0){
+
+  while(item) {
+    if(!ht->cmp_f(item->key, key)) {
       break;
     }
     prev = item;
     item = item->next;
   }
-
-  if(item == NULL){ //if item not found
+  // If the item is not found
+  if(!item) { 
     return -1;
   }
 
-  //unlink from list
-  if(prev){
-    prev->next          = item->next;
-  }else{
+  // Unlink from list
+  if(prev)
+    prev->next = item->next;
+  else
     ht->table[h] = item->next;
-  }
 
-  //free the item
+  // Free the item
   ht->free_k(item->key);
   ht->free_v(item->value);
   free(item);
 
-  //reduce table size
+  // Reduce table size
   ht->size--;
 
   return 0;
 }
 
-void* ht_get(const struct hashtbl * ht, const void* key){
+/**
+ * Function to find a value based on its key
+ * @param ht    hashtable
+ * @param key   the key
+ */
+
+void* ht_get(const struct hashtbl * ht, const void* key) {
   struct hash_item * item = ht_find(ht, key);
   return (item) ? item->value : NULL;
+
+  if (!item)
+
+
 }
 
 int ht_has_key(struct hashtbl * ht, const void* key){

@@ -2,6 +2,8 @@ CC=gcc
 CFLAGS=-Wall -g
 OBJECTS=main.o hashtbl.o ht_func.o db.o book.o user.o
 
+build: main 
+
 main: $(OBJECTS)
 	$(CC) $(CFLAGS) -o main $(OBJECTS)
 

@@ -80,12 +80,26 @@ void book_details(const struct book * b){
 }
 
 int book_add(struct book * b, const char * key, const char * val){
+  int rv = 0;
+
+  char * v = strdup(val);
 
   if(ht_has_key(&b->content, key)){
-    return ht_update(&b->content, strdup(key), strdup(val));
+
+    rv = ht_update(&b->content, key, v);
+    if(rv == -1){
+      free(v);
+    }
   }else{
-    return ht_put(&b->content, strdup(key), strdup(val));
+    char * k = strdup(key);
+    rv = ht_put(&b->content, k, v);
+    if(rv != 1){
+      free(k);
+      free(v);
+    }
   }
+
+  return rv;
 }
 
 int book_borow(struct book * b){
@@ -111,8 +125,8 @@ float book_rating(const struct book * b){
 }
 
 int cmp_f_book_rating(const void * arg1, const void * arg2){
-  const struct book * b1 = (const struct book *) arg1;
-  const struct book * b2 = (const struct book *) arg2;
+  const struct book * b1 = *(const struct book **) arg1;
+  const struct book * b2 = *(const struct book **) arg2;
 
   if(b1->ratings < b2->ratings){
     return -1;

@@ -66,8 +66,8 @@ int user_loses(struct user * u, const struct book * b){
 }
 
 int cmp_f_user(const void * arg1, const void * arg2){
-  const struct user * u1 = (const struct user *) arg1;
-  const struct user * u2 = (const struct user *) arg2;
+  const struct user * u1 = *(const struct user **) arg1;
+  const struct user * u2 = *(const struct user **) arg2;
 
   if(u1->score < u2->score){
     return 1;
