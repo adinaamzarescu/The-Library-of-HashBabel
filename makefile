@@ -25,5 +25,14 @@ book.o: book.c book.h
 user.o: user.c user.h
 	$(CC) $(CFLAGS) -c user.c
 
+check: build
+	valgrind --leak-check=full \
+         --show-leak-kinds=all \
+         --track-origins=yes \
+         --verbose \
+         --log-file=valgrind-out.txt \
+         ./main < ./in/test13.in
+
+
 clean:
 	rm main $(OBJECTS)
