@@ -159,7 +159,7 @@ int ht_put(struct hashtbl * ht, void* key, void * value){
 
 int ht_update(struct hashtbl * ht, const void* key, void * value) {
   struct hash_item * item = ht_find(ht, key);
-  if(!item == NULL) {
+  if(!item) {
     perror("Malloc for item failed");
     return -1;
   }
@@ -222,9 +222,6 @@ int ht_remove(struct hashtbl * ht, const void* key){
 void* ht_get(const struct hashtbl * ht, const void* key) {
   struct hash_item * item = ht_find(ht, key);
   return (item) ? item->value : NULL;
-
-  if (!item)
-
 
 }
 

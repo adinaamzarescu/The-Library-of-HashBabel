@@ -8,7 +8,7 @@
 #include "user.h"
 
 /* Helper function to split a line into tokens */
-static int splits_line(char * line, ssize_t line_len, char * args[], const size_t args_size){
+static int splits_line(char * line, size_t line_len, char * args[], const size_t args_size){
   int i = 0, j = 0;
   char head = ' ';
 
@@ -135,7 +135,7 @@ static void cmd_borrow(struct database * db,
     }else{
       struct book * b = ht_get(&db->library, book_name);
       if(b){
-        if(book_borow(b) == 0){ //if book can't be taken
+        if(!book_borow(b)){ //if book can't be taken
           printf("The book is borrowed.\n");
         }else{
           user_borrows(u, b, days_available);
@@ -163,9 +163,11 @@ static void cmd_return(struct database * db,
           printf("You didn't borrow this book.\n");
         }else{
           if(user_returns(u, b, days_since_borrow) < 0){
-            printf("The user %s has been banned.\n", user_name);
+            printf("The user %s has been banned from this library.\n", user_name);
+            u->score = -1;
           }
           book_rate(b, rating);
+          b->copies = 1;
         }
       }else{
         printf("The book is not in the library.\n");
@@ -188,8 +190,10 @@ static void cmd_lost(struct database * db, const char * user_name, const char * 
           printf("You didn't borrow this book.\n");
         }else{
           if(user_loses(u, b) < 0){
-            printf("The user %s has been banned.\n", user_name);
+            printf("The user %s has been banned from this library.\n", user_name);
+            u->score = -1;
           }
+          cmd_rmv_book(db, book_name);
         }
       }else{
         printf("The book is not in the library.\n");
@@ -221,14 +225,14 @@ static void cmd_top_users(struct database * db){
   struct user ** users = (struct user **) ht_array(&db->users);
   printf("Users ranking:\n");
   if(users){
-    int i;
     const int num_users = ht_size(&db->users);
 
     qsort(users, num_users, sizeof(struct user*), cmp_f_user);
-
-    for(i=0; i < num_users; i++){
+    int rank = 1;
+    for(int i = 0; i < num_users; i++) {
       if(user_is_banned(users[i]) == 0){
-        printf("%d. ", i+1);
+        printf("%d. ", rank);
+        rank ++;
         user_details(users[i]);
       }
     }
@@ -284,7 +288,7 @@ static int run_line(char * const args[], const size_t nargs, struct database * d
 int main(const int argc, char * argv[]){
   int nargs;
   char * line = NULL, *args[10];
-  ssize_t line_len = 0;
+  size_t line_len = 0;
   size_t line_size = 0;
   struct database db;
 

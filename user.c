@@ -29,8 +29,11 @@ void free_f_user(void * arg){
   user_free((struct user *) arg);
 }
 
-int user_is_banned(const struct user * u){
-  return (u->score < 0) ? 1 : 0;
+int user_is_banned(const struct user * u) {
+  if (u->score != -1)
+    return 0;
+  else
+      return 1;
 }
 
 int user_has_book(const struct user * u){
@@ -44,24 +47,23 @@ void user_borrows(struct user * u, const struct book * b, const int days){
 
 
 int user_returns(struct user * u, const struct book * b, const int days_borrowed){
-  const int days_hold = u->days_available - days_borrowed;
-  if(days_hold < 0){  //if hold more than requested
-    u->score += days_hold;  //reduce score with days hold
+  int days_hold = u->days_available - days_borrowed;
+  if(days_hold < 0) {  //if hold more than requested
+    u->score += days_hold * 2;  //reduce score with days hold
   }else{  //faster return
-    u->score += days_hold * 2;
+    u->score += days_hold;
   }
 
   u->borrowed_book = NULL;
   u->days_available = 0;
-
   return u->score;
 }
 
 int user_loses(struct user * u, const struct book * b){
   u->borrowed_book = NULL;
   u->days_available = 0;
-  u->score -= 20;
-
+  u->score -= 50;
+  // printf("user->score for %s = %d\n", u->username, u->score);
   return u->score;
 }
 

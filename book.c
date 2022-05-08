@@ -7,7 +7,7 @@
 static int book_load(struct book * b, const size_t def_number){
   int i, rv = 0;
   char * line = NULL;
-  ssize_t line_len = 0;
+  size_t line_len = 0;
   size_t line_size = 0;
 
   for(i=0; i < def_number; i++){
@@ -102,10 +102,11 @@ int book_add(struct book * b, const char * key, const char * val){
   return rv;
 }
 
-int book_borow(struct book * b){
-  if((b->copies - 1) >= 0){  //if we can borrow
+int book_borow(struct book * b) {
+  // printf("book copies=%d\n", b->copies);
+  if((b->copies == 1)) {  //if we can borrow
     b->purchases++;
-    b->copies--;
+    b->copies = 0;
     return 1;
   }
   return 0;
