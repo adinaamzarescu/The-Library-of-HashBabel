@@ -85,10 +85,10 @@ __________________________________________________________
 
 Resources:
 
-    1. https://ocw.cs.pub.ro/courses/sd-ca/laboratoare/lab-04
+    1. (https)://ocw.cs.pub.ro/courses/sd-ca/laboratoare/lab-04
 
-    2. https://www.journaldev.com/35238/hash-table-in-c-plus-plus#:~:text=A%20Hash%20Table%20in%20C,value%20at%20the%20appropriate%20location.
+    2. (https)://www.journaldev.com/35238/hash-table-in-c-plus-plus#:~:text=A%20Hash%20Table%20in%20C,value%20at%20the%20appropriate%20location.
 
-    3. https://www.hackerearth.com/practice/data-structures/hash-tables/basics-of-hash-tables/tutorial
+    3. (https)://www.hackerearth.com/practice/data-structures/hash-tables/basics-of-hash-tables/tutorial
 
 __________________________________________________________
