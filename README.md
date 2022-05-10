@@ -1,5 +1,4 @@
-# The-Library-of-HashBabel
-### Homework2
+# The-Library-of-HashBabel - Homework2
 ### Copyright Adina-Maria Amzarescu
 
 Project that simulates a library.
