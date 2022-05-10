@@ -1,5 +1,5 @@
 # The-Library-of-HashBabel - Homework2
-### Copyright Adina-Maria Amzarescu
+#### Copyright Adina-Maria Amzarescu
 
 Project that simulates a library.
 It mainly uses hashtables.
