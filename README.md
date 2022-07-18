@@ -65,24 +65,6 @@ ranking.
 
 __________________________________________________________
 
-Feedback:
-
-I really liked this project, I enjoy reading and I had
-a great time working on this. Unfortunatelly I started
-too late and I wasn't able to fix the errors.
-
-I understand that the problem is with 
-`b -> content.capacity`
-This becomes 0 after a while and I get the
-"Integer divide by zero" error. I thought the problem
-is with capacity so I transformed it in long long,
-but it still didn't work.
-
-I am sure the problem is something small but frustrating that
-I missed. Overall I really liked working on this.
-
-__________________________________________________________
-
 Resources:
 
    1. [OCW](https://ocw.cs.pub.ro/courses/sd-ca/laboratoare/lab-04)
